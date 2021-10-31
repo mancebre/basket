@@ -1,0 +1,17 @@
+{
+    "name": "djordjemancovic/basket",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Djordje Mancovic",
+            "email": "dj.mancovic@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    }
+}
