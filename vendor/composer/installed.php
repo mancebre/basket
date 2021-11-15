@@ -1,23 +1,24 @@
-<?php return array(
-    'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'type' => 'library',
-        'install_path' => __DIR__ . '/../../',
-        'aliases' => array(),
-        'reference' => NULL,
-        'name' => 'djordjemancovic/basket',
-        'dev' => true,
+<?php return array (
+  'root' => 
+  array (
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
+    'aliases' => 
+    array (
     ),
-    'versions' => array(
-        'djordjemancovic/basket' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'reference' => NULL,
-            'dev_requirement' => false,
-        ),
+    'reference' => '9c5c52ad2f925f3d96a6875a9988ad51263bfb3b',
+    'name' => 'djordjemancovic/basket',
+  ),
+  'versions' => 
+  array (
+    'djordjemancovic/basket' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9c5c52ad2f925f3d96a6875a9988ad51263bfb3b',
     ),
+  ),
 );

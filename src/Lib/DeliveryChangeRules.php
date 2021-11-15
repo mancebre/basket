@@ -2,19 +2,35 @@
 
 namespace App\Lib;
 
-class DeliveryChangeRules
+use App\Contracts\Discount;
+
+class DeliveryChangeRules implements Discount
 {
+    public float $totalPrice;
+
     /**
-     * @param Float $totalPrice
+     * __construct
+     *
+     * @param  float $totalPrice
+     * @return void
+     */
+    function __construct(Float $totalPrice)
+    {
+        $this->totalPrice = $totalPrice;
+    }
+
+    /**
+     * getDeliveryPrice
+     *
      * @return float
      */
-    private function getDeliveryPrice(Float $totalPrice): float
+    private function getDeliveryPrice(): float
     {
-        if ($totalPrice > 90) {
+        if ($this->totalPrice > 90) {
             return 0;
-        } elseif ($totalPrice > 50 && $totalPrice < 90) {
+        } elseif ($this->totalPrice > 50 && $this->totalPrice < 90) {
             return 2.95;
-        } elseif ($totalPrice < 50) {
+        } elseif ($this->totalPrice < 50) {
             return 4.95;
         } else {
             return 4.95;
@@ -22,14 +38,15 @@ class DeliveryChangeRules
     }
 
     /**
-     * @param Float $totalPrice
+     * apply
+     *
      * @return float
      */
-    public function applyDeliveryPrice(Float $totalPrice): float
+    public function apply(): float
     {
-        $deliveryPrice = $this->getDeliveryPrice($totalPrice);
-        $totalPrice += $deliveryPrice;
+        $deliveryPrice = $this->getDeliveryPrice();
+        $this->totalPrice += $deliveryPrice;
 
-        return $totalPrice;
+        return $this->totalPrice;
     }
 }

@@ -2,24 +2,31 @@
 
 namespace App\Lib;
 
+use App\Lib\SpecialOffer;
+use App\Lib\DeliveryChangeRules;
+
 class Basket extends DeliveryChangeRules
 {
-    use SpecialOffer;
-
     private array $productCatalog;
-    private float $totalPrice = 0;
+    public float $totalPrice = 0;
     private array $orderedProducts;
 
     /**
-     * @param array $productCatalog
+     * __construct
+     *
+     * @param  mixed $productCatalog
+     * @return void
      */
-    function __construct(Array $productCatalog)
+    function __construct(array $productCatalog)
     {
         $this->productCatalog = $productCatalog;
     }
 
     /**
-     * @param $productCode
+     * addProduct
+     *
+     * @param  mixed $productCode
+     * @return void
      */
     public function addProduct($productCode)
     {
@@ -28,34 +35,48 @@ class Basket extends DeliveryChangeRules
     }
 
     /**
+     * getTotalPrice
+     *
      * @return float
      */
     public function getTotalPrice(): float
     {
-        $this->totalPrice = $this->getSpecialOfferDiscount(
+        $specialOffer = new SpecialOffer(
             $this->productCatalog,
             $this->orderedProducts,
             $this->totalPrice
         );
-        $this->totalPrice = $this->applyDeliveryPrice($this->totalPrice);
-//        return number_format((float)$this->totalPrice, 2, '.', '');
+        $this->totalPrice = $specialOffer->apply();
+
+        $deliveryChangeRules = new DeliveryChangeRules($this->totalPrice);
+        $this->totalPrice = $deliveryChangeRules->apply();
+
         return  $this->totalPrice;
     }
 
     /**
-     * @param String $productCode
-     * @param array $productCatalog
-     * @return mixed|void
+     * getProductPrice
+     *
+     * @param  mixed $productCode
+     * @param  mixed $productCatalog
+     * @return float
      */
-    protected function getProductPrice(String $productCode, Array $productCatalog)
+    protected function getProductPrice(String $productCode, array $productCatalog)
     {
         foreach ($productCatalog as $product) {
             if ($product["Code"] === $productCode) {
                 return $product["Price"];
             }
         }
+
+        return 0;
     }
 
+    /**
+     * clearBasket
+     *
+     * @return void
+     */
     public function clearBasket()
     {
         $this->orderedProducts = [];

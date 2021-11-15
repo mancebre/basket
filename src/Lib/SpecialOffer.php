@@ -2,41 +2,62 @@
 
 namespace App\Lib;
 
-trait SpecialOffer
+use App\Contracts\Discount;
+
+class SpecialOffer implements Discount
 {
     private string $specialOfferProductCode = 'R01';
     private int $repeatingProductsCount;
+    public array $productCatalog;
+    public array $orderedProducts;
+    public Float $totalPrice;
 
     /**
-     * @param array $productCatalog
-     * @param array $orderedProducts
-     * @param Float $totalPrice
-     * @return float
+     * __construct
+     *
+     * @param  mixed $productCatalog
+     * @param  mixed $orderedProducts
+     * @param  mixed $totalPrice
+     * @return void
      */
-    public function getSpecialOfferDiscount(Array $productCatalog, Array $orderedProducts, Float $totalPrice): float
+    function __construct(array $productCatalog, array $orderedProducts, Float $totalPrice)
     {
-        $this->getRepeatingProducts($orderedProducts);
-        return $this->applyDiscount($totalPrice, $productCatalog);
+        $this->productCatalog = $productCatalog;
+        $this->orderedProducts = $orderedProducts;
+        $this->totalPrice = $totalPrice;
     }
 
     /**
-     * @param Float $totalPrice
-     * @param array $productCatalog
+     * apply
+     *
      * @return float
      */
-    private function applyDiscount(Float $totalPrice, Array $productCatalog): float
+    public function apply(): float
     {
-        $discountPerEach = $this->getProductDiscount($productCatalog);
+        $this->getRepeatingProducts($this->orderedProducts);
+        return $this->applyDiscount($this->totalPrice, $this->productCatalog);
+    }
+
+    /**
+     * applyDiscount
+     *
+     * @return float
+     */
+    private function applyDiscount(): float
+    {
+        $discountPerEach = $this->getProductDiscount($this->productCatalog);
         $discountTimes = floor($this->repeatingProductsCount / 2);
 
-        return $totalPrice - ($discountPerEach * $discountTimes);
+        return $this->totalPrice - ($discountPerEach * $discountTimes);
     }
 
     /**
-     * @param array $productCatalog
+     * getProductDiscount
+     *
+     * @param  mixed $productCatalog
      * @return float
      */
-    protected function getProductDiscount(Array $productCatalog): float
+    protected function getProductDiscount(array $productCatalog): float
     {
         foreach ($productCatalog as $product) {
             if ($product["Code"] === $this->specialOfferProductCode) {
@@ -47,9 +68,12 @@ trait SpecialOffer
     }
 
     /**
-     * @param array $orderedProducts
+     * getRepeatingProducts
+     *
+     * @param  mixed $orderedProducts
+     * @return void
      */
-    private function getRepeatingProducts(Array $orderedProducts)
+    private function getRepeatingProducts(array $orderedProducts)
     {
         $allRepeatingProducts = array_count_values($orderedProducts);
         $this->repeatingProductsCount = $allRepeatingProducts[$this->specialOfferProductCode] ?? 0;
