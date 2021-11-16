@@ -6,7 +6,7 @@ use App\Contracts\Discount;
 
 class DiscountService
 {
-    public $discount;
+    public Discount $discount;
 
     /**
      * applyDiscount
