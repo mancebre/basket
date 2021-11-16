@@ -4,6 +4,7 @@ namespace App\Lib;
 
 use App\Lib\SpecialOffer;
 use App\Lib\DeliveryChangeRules;
+use App\Services\DiscountService;
 
 class Basket extends DeliveryChangeRules
 {
@@ -46,10 +47,10 @@ class Basket extends DeliveryChangeRules
             $this->orderedProducts,
             $this->totalPrice
         );
-        $this->totalPrice = $specialOffer->apply();
+        $this->totalPrice = DiscountService::make($specialOffer)->applyDiscount();
 
         $deliveryChangeRules = new DeliveryChangeRules($this->totalPrice);
-        $this->totalPrice = $deliveryChangeRules->apply();
+        $this->totalPrice = DiscountService::make($deliveryChangeRules)->applyDiscount();
 
         return  $this->totalPrice;
     }
