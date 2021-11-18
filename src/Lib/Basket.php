@@ -5,35 +5,10 @@ namespace App\Lib;
 use App\Lib\SpecialOffer;
 use App\Lib\DeliveryChangeRules;
 use App\Services\DiscountService;
+use App\Lib\AbstractBasket;
 
-class Basket extends DeliveryChangeRules
+class Basket extends AbstractBasket
 {
-    private array $productCatalog;
-    public float $totalPrice = 0;
-    private array $orderedProducts;
-
-    /**
-     * __construct
-     *
-     * @param  mixed $productCatalog
-     * @return void
-     */
-    function __construct(array $productCatalog)
-    {
-        $this->productCatalog = $productCatalog;
-    }
-
-    /**
-     * addProduct
-     *
-     * @param  mixed $productCode
-     * @return void
-     */
-    public function addProduct($productCode)
-    {
-        $this->orderedProducts[] = $productCode;
-        $this->totalPrice += $this->getProductPrice($productCode, $this->productCatalog);
-    }
 
     /**
      * getTotalPrice
@@ -53,34 +28,5 @@ class Basket extends DeliveryChangeRules
         $this->totalPrice = DiscountService::make($deliveryChangeRules)->applyDiscount();
 
         return  $this->totalPrice;
-    }
-
-    /**
-     * getProductPrice
-     *
-     * @param  mixed $productCode
-     * @param  mixed $productCatalog
-     * @return float
-     */
-    protected function getProductPrice(String $productCode, array $productCatalog)
-    {
-        foreach ($productCatalog as $product) {
-            if ($product["Code"] === $productCode) {
-                return $product["Price"];
-            }
-        }
-
-        return 0;
-    }
-
-    /**
-     * clearBasket
-     *
-     * @return void
-     */
-    public function clearBasket()
-    {
-        $this->orderedProducts = [];
-        $this->totalPrice = 0;
     }
 }
